@@ -6,25 +6,32 @@ local os = jit.os
 if os == "Linux" then 
 	common_files = {
 		{name = "Home", path = "~/"},
-		-- {name = "University", path = "~/University"},
+		{name = "University", path = "~/University"},
 		{name = "Nvim", path = "~/.config/nvim"},
 	}
+end
+
+-- Count number of common locations -> Will use info to inform window size
+counter = 0
+for i, file in ipairs(common_files) do
+	counter = counter + 1
 end
 
 local lastLocation = ""
 
 local function openWindow()
+
+
 	-- Create a new buffer and window
 	local buf = vim.api.nvim_create_buf(false, true) -- create new empty buffer
 	local win = vim.api.nvim_open_win(buf, true, {
 		relative = 'win',
 		width = 15,
-		height = 8,
+		height = counter + 1,
 		col = vim.o.columns - 20,
 		row = 1,
 		style = 'minimal',
 		border = "rounded",
-		-- border = { "╔", "═", "╗", "║", "╝", "═", "╚", "║" },
 	})
 
 	-- Populate the table with my locations
@@ -43,12 +50,7 @@ local function openWindow()
 	vim.keymap.set("n", "<CR>", function()
 		local cursor = vim.api.nvim_win_get_cursor(0)
 		local choice = lines[cursor[1]]
-		-- Hit Enter
-		-- Pulls current Line, Checks the text on line. 
-		-- Compares to list, and then finds path.
-		-- Save current locations
-		-- change location and file to new location
-		-- Close window
+
 
 		for i, file in ipairs(common_files) do
 			if file.name == choice then
