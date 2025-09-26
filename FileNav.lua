@@ -5,9 +5,12 @@ local os = jit.os
 -- Windows, Darwin(MAC), Linux
 if os == "Linux" then 
 	common_files = {
+		{name = "FileNav", path = ""},
+		{name = "=======", path = ""},
 		{name = "Home", path = "~/"},
 		{name = "University", path = "~/University"},
 		{name = "Nvim", path = "~/.config/nvim"},
+		{name = "Projects", path = ""},
 	}
 end
 
@@ -17,17 +20,23 @@ for i, file in ipairs(common_files) do
 	counter = counter + 1
 end
 
+-- Count number of largest name -> Will also use for window size
+largestName = 0
+for i, file in ipairs(common_files) do
+	if #file.name > largestName then
+		largestName = #file.name
+	end
+end
+
 local lastLocation = ""
 
 local function openWindow()
-
-
 	-- Create a new buffer and window
 	local buf = vim.api.nvim_create_buf(false, true) -- create new empty buffer
 	local win = vim.api.nvim_open_win(buf, true, {
 		relative = 'win',
-		width = 15,
-		height = counter + 1,
+		width = largestName + 2,
+		height = counter,
 		col = vim.o.columns - 20,
 		row = 1,
 		style = 'minimal',
@@ -51,9 +60,11 @@ local function openWindow()
 		local cursor = vim.api.nvim_win_get_cursor(0)
 		local choice = lines[cursor[1]]
 
-
 		for i, file in ipairs(common_files) do
 			if file.name == choice then
+				if file.path == "" or file.path == " " then
+					return 
+				end
 				print(file.path)
 				lastLocation = vim.fn.getcwd()
 
