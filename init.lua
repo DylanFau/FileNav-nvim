@@ -100,6 +100,3 @@ vim.api.nvim_create_user_command('NavMenu', function()
 		print("Nav already open")
 	end
 end, { desc = "Opens a navigation menu" })
-
-
-
