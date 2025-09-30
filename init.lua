@@ -93,8 +93,11 @@ vim.api.nvim_create_user_command('NavMenu', function()
 	if buf == -1 and win == -1 then
 		openWindow()
 	elseif buf == -1 or win == -1 then
-		vim.api.nvim_win_close(win, true)
-		vim.api.nvim_buf_delete(buf, {force = true})
+		if buf == -1 then
+			vim.api.nvim_win_close(win, true)
+		else
+			vim.api.nvim_buf_delete(buf, { force = true })
+		end
 		openWindow()
 	elseif buf ~= -1 and win ~= -1 then
 		print("Nav already open")
